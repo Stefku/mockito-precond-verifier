@@ -26,7 +26,7 @@ public class MinAnnotationVerifierTest {
     private MinAnnotationVerifier sut;
 
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -62,8 +62,8 @@ public class MinAnnotationVerifierTest {
     public void test_call_with_wrong_value_type_throws_IllegalArgumentException() throws Exception {
         double value = 3.14;
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Type is not considered supported by @Min");
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Type is not considered supported by @Min");
 
         sut.assertViolation(getAnnotationMin10(), value);
     }
@@ -79,9 +79,13 @@ public class MinAnnotationVerifierTest {
      * test supported types
      */
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void test_call_with_long_less_than_min_throws_AssertionError() throws Exception {
         long value = 8L;
+
+        thrown.handleAssertionErrors();
+        thrown.expect(AssertionError.class);
+        thrown.expectMessage("Called @Min(10) parameter with 8");
 
         sut.assertViolation(getAnnotationMin10(), value);
     }
@@ -101,7 +105,7 @@ public class MinAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_int_greater_than_min_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_int_greater_than_min_doesnt_throw_AssertionError() throws Exception {
         int value = 12;
 
         sut.assertViolation(getAnnotationMin10(), value);
@@ -115,7 +119,7 @@ public class MinAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_short_greater_than_min_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_short_greater_than_min_doesnt_throw_AssertionError() throws Exception {
         short value = 12;
 
         sut.assertViolation(getAnnotationMin10(), value);
@@ -129,7 +133,7 @@ public class MinAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_byte_greater_than_min_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_byte_greater_than_min_doesnt_throw_AssertionError() throws Exception {
         byte value = 12;
 
         sut.assertViolation(getAnnotationMin10(), value);
@@ -143,7 +147,7 @@ public class MinAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_BigDecimal_greater_than_min_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_BigDecimal_greater_than_min_doesnt_throw_AssertionError() throws Exception {
         BigDecimal value = BigDecimal.valueOf(12);
 
         sut.assertViolation(getAnnotationMin10(), value);
@@ -157,7 +161,7 @@ public class MinAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_BigInteger_greater_than_min_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_BigInteger_greater_than_min_doesnt_throw_AssertionError() throws Exception {
         BigInteger value = BigInteger.valueOf(12);
 
         sut.assertViolation(getAnnotationMin10(), value);

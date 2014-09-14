@@ -25,7 +25,7 @@ public class MaxAnnotationVerifierTest {
     private MaxAnnotationVerifier sut;
 
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -61,8 +61,8 @@ public class MaxAnnotationVerifierTest {
     public void test_call_with_wrong_value_type_throws_IllegalArgumentException() throws Exception {
         double value = 3.14;
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Type is not considered supported by @Max");
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Type is not considered supported by @Max");
 
         sut.assertViolation(getAnnotationMax10(), value);
     }
@@ -78,15 +78,19 @@ public class MaxAnnotationVerifierTest {
      * test supported types
      */
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void test_call_with_long_greater_than_max_throws_AssertionError() throws Exception {
         long value = 11L;
+
+        thrown.handleAssertionErrors();
+        thrown.expect(AssertionError.class);
+        thrown.expectMessage("Called @Max(10) parameter with 11");
 
         sut.assertViolation(getAnnotationMax10(), value);
     }
 
     @Test
-    public void test_call_with_long_less_than_max_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_long_less_than_max_doesnt_throw_AssertionError() throws Exception {
         long value = 9L;
 
         sut.assertViolation(getAnnotationMax10(), value);
@@ -100,7 +104,7 @@ public class MaxAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_int_less_than_max_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_int_less_than_max_doesnt_throw_AssertionError() throws Exception {
         int value = 9;
 
         sut.assertViolation(getAnnotationMax10(), value);
@@ -114,7 +118,7 @@ public class MaxAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_short_less_than_max_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_short_less_than_max_doesnt_throw_AssertionError() throws Exception {
         short value = 9;
 
         sut.assertViolation(getAnnotationMax10(), value);
@@ -128,7 +132,7 @@ public class MaxAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_byte_less_than_max_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_byte_less_than_max_doesnt_throw_AssertionError() throws Exception {
         byte value = 9;
 
         sut.assertViolation(getAnnotationMax10(), value);
@@ -142,7 +146,7 @@ public class MaxAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_BigDecimal_less_than_max_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_BigDecimal_less_than_max_doesnt_throw_AssertionError() throws Exception {
         BigDecimal value = BigDecimal.valueOf(9);
 
         sut.assertViolation(getAnnotationMax10(), value);
@@ -156,7 +160,7 @@ public class MaxAnnotationVerifierTest {
     }
 
     @Test
-    public void test_call_with_BigInteger_less_than_max_dont_throw_AssertionError() throws Exception {
+    public void test_call_with_BigInteger_less_than_max_doesnt_throw_AssertionError() throws Exception {
         BigInteger value = BigInteger.valueOf(9);
 
         sut.assertViolation(getAnnotationMax10(), value);

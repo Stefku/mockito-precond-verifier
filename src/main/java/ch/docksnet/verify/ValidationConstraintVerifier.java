@@ -19,28 +19,44 @@ public class ValidationConstraintVerifier {
     private MockUtil mockUtil = new MockUtil();
 
     public ValidationConstraintVerifier() {
+        populateVerifiers();
+    }
+
+    private void populateVerifiers() {
         verifiers = new ArrayList<>();
         verifiers.add(new NotNullAnnotationVerifier());
         verifiers.add(new MaxAnnotationVerifier());
     }
 
     public void verifyConstraints(Object mock) {
-        if (mock == null) {
-            throw new NotAMockException("Argument should be a mock, but is null");
-        }
-        if (!mockUtil.isMock(mock)) {
-            throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass().getSimpleName());
-        }
-        List<Invocation> invokations = getInvokations(mock);
-        for (Invocation invokation : invokations) {
-            Object[] rawArguments = invokation.getRawArguments();
-            Annotation[][] parameterAnnotations = invokation.getMethod().getParameterAnnotations();
-            verifyValidationConstraints(parameterAnnotations, rawArguments);
+        assertNotNull(mock);
+        assertIsMock(mock);
+
+        List<Invocation> invocations = getInvocations(mock);
+        for (Invocation invocation : invocations) {
+            verifyInvocation(invocation);
         }
     }
 
-    private java.util.List<Invocation> getInvokations(Object mock) {
-        MockUtil mockUtil = new MockUtil();
+    private void assertNotNull(Object mock) {
+        if (mock == null) {
+            throw new NotAMockException("Argument should be a mock, but is null");
+        }
+    }
+
+    private void assertIsMock(Object mock) {
+        if (!mockUtil.isMock(mock)) {
+            throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass().getSimpleName());
+        }
+    }
+
+    private void verifyInvocation(Invocation invocation) {
+        Object[] rawArguments = invocation.getRawArguments();
+        Annotation[][] parameterAnnotations = invocation.getMethod().getParameterAnnotations();
+        verifyValidationConstraints(parameterAnnotations, rawArguments);
+    }
+
+    private java.util.List<Invocation> getInvocations(Object mock) {
         InternalMockHandler<?> mockHandler = mockUtil.getMockHandler(mock);
         InvocationContainer invocationContainer = mockHandler.getInvocationContainer();
         return invocationContainer.getInvocations();
@@ -52,7 +68,6 @@ public class ValidationConstraintVerifier {
             Object rawArgument = rawArguments[i];
             verifyArgumentWithAnnotations(parameterAnnotation, rawArgument);
         }
-
     }
 
     private void verifyArgumentWithAnnotations(Annotation[] parameterAnnotation, Object rawArgument) {

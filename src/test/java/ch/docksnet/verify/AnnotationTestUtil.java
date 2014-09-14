@@ -1,6 +1,7 @@
 package ch.docksnet.verify;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
 
@@ -20,6 +21,10 @@ public class AnnotationTestUtil {
         return TestInterface.class.getDeclaredMethod("withMaxMinus10", Long.class).getParameterAnnotations()[0][0];
     }
 
+    public static Annotation getAnnotationMin10() throws NoSuchMethodException {
+        return TestInterface.class.getDeclaredMethod("withMin10", Long.class).getParameterAnnotations()[0][0];
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     public interface TestInterface {
         void withNotNull(@NotNull String arg1);
@@ -27,5 +32,7 @@ public class AnnotationTestUtil {
         void withMax10(@Max(value = 10) Long l);
 
         void withMaxMinus10(@Max(value = -10) Long l);
+
+        void withMin10(@Min(value = 10) Long l);
     }
 }

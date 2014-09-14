@@ -1,5 +1,6 @@
 package ch.docksnet.verify;
 
+import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.stubbing.InvocationContainer;
 import org.mockito.internal.util.MockUtil;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ValidationConstraintVerifier {
 
     private List<AnnotationVerifier> verifiers;
+    private MockUtil mockUtil = new MockUtil();
 
     public ValidationConstraintVerifier() {
         verifiers = new ArrayList<>();
@@ -23,6 +25,12 @@ public class ValidationConstraintVerifier {
     }
 
     public void verify(Object mock) {
+        if (mock == null) {
+            throw new NotAMockException("Argument should be a mock, but is null");
+        }
+        if (!mockUtil.isMock(mock)) {
+            throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass().getSimpleName());
+        }
         List<Invocation> invokations = getInvokations(mock);
         for (Invocation invokation : invokations) {
             Object[] rawArguments = invokation.getRawArguments();

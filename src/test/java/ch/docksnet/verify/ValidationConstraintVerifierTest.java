@@ -2,9 +2,13 @@ package ch.docksnet.verify;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.exceptions.misusing.NotAMockException;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
@@ -22,7 +26,22 @@ public class ValidationConstraintVerifierTest {
         sut = new ValidationConstraintVerifier();
     }
 
+    @Test
+    public void test_mock_is_accepted() throws Exception {
+        Object mock = mock(List.class);
+        sut.verify(mock);
+    }
 
+    @Test(expected = NotAMockException.class)
+    public void test_non_mock_is_not_accepted() throws Exception {
+        Object noMock = new ArrayList<String>();
+        sut.verify(noMock);
+    }
+
+    @Test(expected = NotAMockException.class)
+    public void test_null_is_not_accepted() throws Exception {
+        sut.verify(null);
+    }
 
     /*
      * NOT NULL

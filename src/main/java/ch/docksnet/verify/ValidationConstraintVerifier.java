@@ -24,7 +24,7 @@ public class ValidationConstraintVerifier {
         verifiers.add(new MaxAnnotationVerifier());
     }
 
-    public void verify(Object mock) {
+    public void verifyConstraints(Object mock) {
         if (mock == null) {
             throw new NotAMockException("Argument should be a mock, but is null");
         }

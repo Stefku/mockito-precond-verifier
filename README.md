@@ -39,53 +39,61 @@ public class MainService {
 The called method of the other service only takes values that are not null and would otherwise throw a 
 NullPointerException
 
-    public class OtherService {
-        /**
-         * This method throws a NPE if {@code input} is {@code null}.
-         *
-         * @param input {@code null} is not allowed
-         * @return square of input.
-         */
-        @SuppressWarnings("UnnecessaryUnboxing")
-        public long square(@NotNull Long input) {
-            return input.longValue() * input.longValue();
-        }
+```java
+public class OtherService {
+    /**
+     * This method throws a NPE if {@code input} is {@code null}.
+     *
+     * @param input {@code null} is not allowed
+     * @return square of input.
+     */
+    @SuppressWarnings("UnnecessaryUnboxing")
+    public long square(@NotNull Long input) {
+        return input.longValue() * input.longValue();
     }
+}
+```
     
 In a test that uses real objects a call to MainService#square() would lead to a NPE
 
-    @Test(expected = NullPointerException.class)
-    public void test_exception_on_null() throws Exception {
-        OtherService otherService = new OtherService();
-        MainService sut = new MainService(otherService);
+```java
+@Test(expected = NullPointerException.class)
+public void test_exception_on_null() throws Exception {
+    OtherService otherService = new OtherService();
+    MainService sut = new MainService(otherService);
 
-        sut.square(null);
-    }
+    sut.square(null);
+}
+```
     
 But if using a mock of OtherService the NPE would not be thrown
 
-    @Test
-    public void test_exception_on_null() throws Exception {
-        MainService sut = new MainService(otherService);
+```java
+@Test
+public void test_exception_on_null() throws Exception {
+    MainService sut = new MainService(otherService);
 
-        try {
-            sut.square(null);
-        } catch (NullPointerException ex) {
-            throw new NullPointerException("Will never be thrown because the mock is not aware of precondition @NotNull");
-        }
+    try {
+        sut.square(null);
+    } catch (NullPointerException ex) {
+        throw new NullPointerException("Will never be thrown because the mock is not aware of precondition @NotNull");
     }
+}
+```
     
 Using the constraint verification of this project the illegal call leads to an AssertionError. So this unit test
 
-    @Test
-    public void test_that_constraint_verifier_throws_Error_on_null() throws Exception {
-        MainService sut = new MainService(otherService);
+```java
+@Test
+public void test_that_constraint_verifier_throws_Error_on_null() throws Exception {
+    MainService sut = new MainService(otherService);
 
-        sut.square(null);
+    sut.square(null);
 
-        ValidationConstraintVerifier verifier = new ValidationConstraintVerifier();
-        verifier.verifyConstraints(otherService);
-    }
+    ValidationConstraintVerifier verifier = new ValidationConstraintVerifier();
+    verifier.verifyConstraints(otherService);
+}
+```
 
 will raise
 
@@ -93,14 +101,16 @@ will raise
     
 To make this validation available in all tests the verification can be made in tear down method
 
-    private ValidationConstraintVerifier verifier = new ValidationConstraintVerifier();
+```java
+private ValidationConstraintVerifier verifier = new ValidationConstraintVerifier();
 
-    @Before
-    public void setUp() throws Exception {
-        otherService = mock(OtherService.class);
-    }
+@Before
+public void setUp() throws Exception {
+    otherService = mock(OtherService.class);
+}
 
-    @After
-    public void tearDown() {
-        verifier.verifyConstraints(otherService);
-    }
+@After
+public void tearDown() {
+    verifier.verifyConstraints(otherService);
+}
+```

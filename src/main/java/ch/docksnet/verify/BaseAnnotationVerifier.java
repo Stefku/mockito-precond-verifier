@@ -7,7 +7,7 @@ import java.lang.annotation.Annotation;
  */
 public abstract class BaseAnnotationVerifier implements AnnotationVerifier {
 
-    private final Class<?> baseAnnotation;
+    protected final Class<?> baseAnnotation;
 
     protected BaseAnnotationVerifier(Class<?> baseAnnotation) {
         this.baseAnnotation = baseAnnotation;

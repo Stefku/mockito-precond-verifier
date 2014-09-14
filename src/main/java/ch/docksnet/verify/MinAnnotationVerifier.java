@@ -2,13 +2,11 @@ package ch.docksnet.verify;
 
 import javax.validation.constraints.Min;
 import java.lang.annotation.Annotation;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  * @author Stefan Zeller
  */
-public class MinAnnotationVerifier extends BaseAnnotationVerifier {
+public class MinAnnotationVerifier extends MinMaxAnnotationVerifier {
 
     public MinAnnotationVerifier() {
         super(Min.class);
@@ -27,28 +25,9 @@ public class MinAnnotationVerifier extends BaseAnnotationVerifier {
 
         long number = toLong(value);
 
-        if (number > min.value()) {
+        if (number < min.value()) {
             throw new AssertionError(errorPrefix + String.format("Called @Min(%s) parameter with %s", min.value(), number));
         }
     }
 
-    private long toLong(Object value) {
-        long number;
-        if (value instanceof Long) {
-            number = (Long) value;
-        } else if (value instanceof Integer) {
-            number = ((Integer) value).longValue();
-        } else if (value instanceof Short) {
-            number = ((Short) value).longValue();
-        } else if (value instanceof Byte) {
-            number = ((Byte) value).longValue();
-        } else if (value instanceof BigDecimal) {
-            number = ((BigDecimal) value).longValue();
-        } else if (value instanceof BigInteger) {
-            number = ((BigInteger) value).longValue();
-        } else {
-            throw new IllegalArgumentException("Type is not considered supported by @Min: " + value.getClass().toString());
-        }
-        return number;
-    }
 }

@@ -2,7 +2,9 @@ package ch.docksnet.verify;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runners.MethodSorters;
 
 import java.lang.annotation.Annotation;
@@ -10,7 +12,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static ch.docksnet.verify.AnnotationTestUtil.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stefan Zeller
@@ -18,7 +21,11 @@ import static org.junit.Assert.*;
 @SuppressWarnings("ConstantConditions")
 @FixMethodOrder(MethodSorters.JVM)
 public class MaxAnnotationVerifierTest {
+
     private MaxAnnotationVerifier sut;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -50,9 +57,12 @@ public class MaxAnnotationVerifierTest {
         sut.assertViolation(getAnnotationNotNull(), value);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void test_call_with_wrong_value_type_throws_IllegalArgumentException() throws Exception {
         double value = 3.14;
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Type is not considered supported by @Max");
 
         sut.assertViolation(getAnnotationMax10(), value);
     }
@@ -64,6 +74,9 @@ public class MaxAnnotationVerifierTest {
         sut.assertViolation(getAnnotationMaxMinus10(), value);
     }
 
+    /*
+     * test supported types
+     */
 
     @Test(expected = AssertionError.class)
     public void test_call_with_long_greater_than_max_throws_AssertionError() throws Exception {

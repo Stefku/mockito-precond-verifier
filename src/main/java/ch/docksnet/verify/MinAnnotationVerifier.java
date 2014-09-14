@@ -8,20 +8,15 @@ import java.math.BigInteger;
 /**
  * @author Stefan Zeller
  */
-public class MinAnnotationVerifier implements AnnotationVerifier {
-    @Override
-    public boolean canHandle(Annotation annotation) {
-        if (annotation instanceof Min) {
-            return true;
-        }
-        return false;
+public class MinAnnotationVerifier extends BaseAnnotationVerifier {
+
+    public MinAnnotationVerifier() {
+        super(Min.class);
     }
 
     @Override
     public void assertViolation(Annotation annotation, Object value) {
-        if (!canHandle(annotation)) {
-            throw new IllegalArgumentException("Cannot handle " + annotation);
-        }
+        super.assertViolation(annotation, value);
 
         if (value == null) {
             // @Min considers null as valid

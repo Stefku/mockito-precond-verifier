@@ -8,20 +8,15 @@ import java.math.BigInteger;
 /**
  * @author Stefan Zeller
  */
-public class MaxAnnotationVerifier implements AnnotationVerifier {
-    @Override
-    public boolean canHandle(Annotation annotation) {
-        if (annotation instanceof Max) {
-            return true;
-        }
-        return false;
+public class MaxAnnotationVerifier extends BaseAnnotationVerifier {
+
+    protected MaxAnnotationVerifier() {
+        super(Max.class);
     }
 
     @Override
     public void assertViolation(Annotation annotation, Object value) {
-        if (!canHandle(annotation)) {
-            throw new IllegalArgumentException("Cannot handle " + annotation);
-        }
+        super.assertViolation(annotation, value);
 
         if (value == null) {
             // @Max considers null as valid

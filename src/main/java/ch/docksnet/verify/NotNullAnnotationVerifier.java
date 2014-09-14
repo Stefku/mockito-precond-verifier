@@ -6,21 +6,16 @@ import java.lang.annotation.Annotation;
 /**
  * @author Stefan Zeller
  */
-public class NotNullAnnotationVerifier implements AnnotationVerifier {
+public class NotNullAnnotationVerifier extends BaseAnnotationVerifier {
 
-    @Override
-    public boolean canHandle(Annotation annotation) {
-        if (annotation instanceof NotNull) {
-            return true;
-        }
-        return false;
+    protected NotNullAnnotationVerifier() {
+        super(NotNull.class);
     }
 
     @Override
     public void assertViolation(Annotation annotation, Object value) {
-        if (!canHandle(annotation)) {
-            throw new IllegalArgumentException("Cannot handle " + annotation);
-        }
+        super.assertViolation(annotation, value);
+
         if (value == null) {
             throw new AssertionError(errorPrefix + "Called @NotNull parameter with null");
         }

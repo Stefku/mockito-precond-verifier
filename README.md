@@ -21,18 +21,20 @@ Example
 -------
 
 Let's say there is a class MainService that makes use of a OtherService
- 
-     public class MainService {
-         private OtherService otherService;
-     
-         public MainService(OtherService otherService) {
-             this.otherService = otherService;
-         }
-     
-         public long square(Long input) {
-             return otherService.square(input);
-         }
-     }
+
+```java
+public class MainService {
+    private OtherService otherService;
+    
+    public MainService(OtherService otherService) {
+        this.otherService = otherService;
+    }
+    
+    public long square(Long input) {
+        return otherService.square(input);
+    }
+}
+```
      
 The called method of the other service only takes values that are not null and would otherwise throw a 
 NullPointerException

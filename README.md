@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Stefku/mockito-precond-verifier.svg?branch=master.png)](https://travis-ci.org/Stefku/mockito-precond-verifier.svg?branch=master)
+
 Verifying constraint violations on mocked APIs
 ==============================================
 

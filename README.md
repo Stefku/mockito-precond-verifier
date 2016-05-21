@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Stefku/mockito-precond-verifier.svg?branch=master)](https://travis-ci.org/Stefku/mockito-precond-verifier)
+#Mockito Precondition Verifier [![Build Status](https://travis-ci.org/Stefku/mockito-precond-verifier.svg?branch=master)](https://travis-ci.org/Stefku/mockito-precond-verifier)
 
 Verifying constraint violations on mocked APIs
 ==============================================
